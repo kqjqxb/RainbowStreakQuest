@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const fontDMSansRegular = 'DMSans-Regular';
 
-const LoadingBerlinTravelHelperScreen = ({ setSelectedBerlinScreen }) => {
+const LoadingBerlinTravelHelperScreen = ({ setSelectedRainbowScreen }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const navigation = useNavigation();
   const [percentage, setPercentage] = useState(0);
@@ -43,7 +43,7 @@ const LoadingBerlinTravelHelperScreen = ({ setSelectedBerlinScreen }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      setSelectedBerlinScreen('Home');
+      setSelectedRainbowScreen('Home');
     }, 3000);
   }, [percentage]);
 

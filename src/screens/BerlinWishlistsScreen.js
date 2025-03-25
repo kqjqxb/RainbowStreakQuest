@@ -19,7 +19,7 @@ import popularSouvenirsData from '../components/popularSouvenirsData';
 const fontDMSansRegular = 'DMSans-Regular';
 
 
-const BerlinWishlistsScreen = ({ setSelectedBerlinScreen, selectedBerlinScreen }) => {
+const BerlinWishlistsScreen = ({ setSelectedRainbowScreen, selectedRainbowScreen }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
     const [modalVisible, setModalVisible] = useState(false);
     const [modalDetailsVisible, setModalDetailsVisible] = useState(false);
@@ -98,7 +98,7 @@ const BerlinWishlistsScreen = ({ setSelectedBerlinScreen, selectedBerlinScreen }
         };
 
         loadBerlinWishlists();
-    }, [berlinWishlists, selectedBerlinScreen]);
+    }, [berlinWishlists, selectedRainbowScreen]);
 
     useEffect(() => {
         if (wishlistScrollViewRef.current) {

@@ -15,7 +15,7 @@ import { loadUserData } from './src/redux/userSlice';
 
 const Stack = createNativeStackNavigator();
 
-const BerlinTravelHelperStack = () => {
+const RainbowStreakQuestStack = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
@@ -33,40 +33,40 @@ const AppNavigator = () => {
   const dispatch = useDispatch();
   const { user, setUser } = useContext(UserContext);
 
-  const [initializingBerlinTravelApp, setInitializingBerlinTravelApp] = useState(true);
+  const [initializingRainbowStreakApp, setInitializingRainbowStreakApp] = useState(true);
 
   useEffect(() => {
     dispatch(loadUserData());
   }, [dispatch]);
 
   useEffect(() => {
-    const loadBerlinTravelUser = async () => {
+    const loadRainbowStreakUser = async () => {
       try {
-        const deviceId = await DeviceInfo.getUniqueId();
-        const storageKey = `currentUser_${deviceId}`;
-        const storedBerlinTravelUser = await AsyncStorage.getItem(storageKey);
+        const rainbowStreakDeviceId = await DeviceInfo.getUniqueId();
+        const storageKey = `currentUser_${rainbowStreakDeviceId}`;
+        const storedRainbowStreakUser = await AsyncStorage.getItem(storageKey);
 
-        if (storedBerlinTravelUser) {
-          setUser(JSON.parse(storedBerlinTravelUser));
+        if (storedRainbowStreakUser) {
+          setUser(JSON.parse(storedRainbowStreakUser));
         } 
       } catch (error) {
-        console.error('Error loading of berlinTravelHelper user', error);
+        console.error('Error loading of rainbowStreakUser user', error);
       } finally {
-        setInitializingBerlinTravelApp(false);
+        setInitializingRainbowStreakApp(false);
       }
     };
-    loadBerlinTravelUser();
+    loadRainbowStreakUser();
   }, [setUser]);
 
-  if (initializingBerlinTravelApp) {
+  if (initializingRainbowStreakApp) {
     return (
       <View style={{
         justifyContent: 'center',
-        backgroundColor: '#2E2E2E',
+        backgroundColor: '#268A42',
         flex: 1,
         alignItems: 'center',
       }}>
-        <ActivityIndicator size="large" color="#FF0000" />
+        <ActivityIndicator size="large" color="#FDB938" />
       </View>
     );
   }
@@ -81,4 +81,4 @@ const AppNavigator = () => {
 };
 
 
-export default BerlinTravelHelperStack;
+export default RainbowStreakQuestStack;

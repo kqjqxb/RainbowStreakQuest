@@ -1,8 +1,8 @@
 import React from 'react';
-import BerlinTravelHelperStack from './StackNavigator';
+import RainbowStreakQuestStack from './StackNavigator';
 
 function App() {
-  return <BerlinTravelHelperStack />;
+  return <RainbowStreakQuestStack />;
 }
 
 export default App;

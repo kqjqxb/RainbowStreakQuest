@@ -14,7 +14,7 @@ import { ChevronLeftIcon } from 'react-native-heroicons/solid';
 
 const fontDMSansRegular = 'DMSans-Regular';
 
-const BerlinPlaceDetailsScreen = ({ setSelectedBerlinScreen, selectedBerlinScreen, selectedPlace, selectedBerlinPlace }) => {
+const BerlinPlaceDetailsScreen = ({ setSelectedRainbowScreen, selectedRainbowScreen, selectedPlace, selectedBerlinPlace }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
     const [visited, setVisited] = useState([]);
 
@@ -29,7 +29,7 @@ const BerlinPlaceDetailsScreen = ({ setSelectedBerlinScreen, selectedBerlinScree
         };
 
         fetchVisitedPlaces();
-    }, [selectedBerlinScreen,]);
+    }, [selectedRainbowScreen,]);
 
     const handleVisited = async (favourite) => {
         try {
@@ -76,7 +76,7 @@ const BerlinPlaceDetailsScreen = ({ setSelectedBerlinScreen, selectedBerlinScree
             }}>
                 <TouchableOpacity
                     onPress={() => {
-                        setSelectedBerlinScreen('Home');
+                        setSelectedRainbowScreen('Home');
                     }}
                     style={{
                         justifyContent: 'center',
