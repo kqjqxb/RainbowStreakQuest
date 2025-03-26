@@ -17,7 +17,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import SettingsScreen from './SettingsScreen';
-import LoadingBerlinTravelHelperScreen from './LoadingBerlinTravelHelperScreen';
+import LoadingRainbowStreakScreen from './LoadingRainbowStreakScreen';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
 import RainbowLepreGameScreen from './RainbowLepreGameScreen';
 import RainbowCalendarScreen from './RainbowCalendarScreen';
@@ -801,7 +801,7 @@ const HomeScreen = () => {
       ) : selectedRainbowScreen === 'Calendar' ? (
         <RainbowCalendarScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} />
       ) : selectedRainbowScreen === 'LoadingRainbow' ? (
-        <LoadingBerlinTravelHelperScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} />
+        <LoadingRainbowStreakScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} />
       ) : null}
 
       {selectedRainbowScreen !== 'LoadingRainbow' && !(selectedRainbowScreen === 'Game' && isRainbowGameStarted) && (

@@ -1,13 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, ImageBackground, Dimensions, Animated, Text, ActivityIndicator, Easing, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, ImageBackground, Dimensions, Animated,  } from 'react-native';
 
-const fontDMSansRegular = 'DMSans-Regular';
-
-const LoadingBerlinTravelHelperScreen = ({ setSelectedRainbowScreen }) => {
+const LoadingRainbowStreakScreen = ({ setSelectedRainbowScreen }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
 
-  // Змініть початкове значення animatedOpacity на 0 і використовуйте просте Animated.timing
   const animatedOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -54,4 +50,4 @@ const LoadingBerlinTravelHelperScreen = ({ setSelectedRainbowScreen }) => {
   );
 };
 
-export default LoadingBerlinTravelHelperScreen;
+export default LoadingRainbowStreakScreen;
