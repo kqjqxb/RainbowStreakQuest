@@ -22,7 +22,7 @@ import BerlinWishlistsScreen from './BerlinWishlistsScreen';
 import CasScreen from './CasScreen';
 import LoadingBerlinTravelHelperScreen from './LoadingBerlinTravelHelperScreen';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
-import CatchScreen from './CatchScreen';
+import RainbowLepreGameScreen from './RainbowLepreGameScreen';
 import RainbowCalendarScreen from './RainbowCalendarScreen';
 
 const homeRainbowScreensButtons = [
@@ -206,7 +206,6 @@ const HomeScreen = () => {
   const handleMarkAsDone = async () => {
     if (!selectedHabit) return;
 
-    // Зберігаємо попередній статус вибраної звички для визначення delta
     const wasDone = selectedHabit.status === 'done';
 
     const updatedHabits = rainbowHabbits.map(habit => {
@@ -221,12 +220,9 @@ const HomeScreen = () => {
     try {
       await AsyncStorage.setItem('rainbowHabbits', JSON.stringify(updatedHabits));
 
-      // Отримуємо поточне значення rainbowSeries (як число)
       const currentSeriesString = await AsyncStorage.getItem('rainbowSeries');
       const currentSeries = currentSeriesString ? parseInt(currentSeriesString, 10) : 0;
 
-      // Якщо звичка переходить з not done -> done (wasDone === false), додаємо 1,
-      // якщо з done -> not done (wasDone === true), віднімаємо 1.
       const delta = wasDone ? -1 : 1;
       const newSeries = currentSeries + delta;
       await AsyncStorage.setItem('rainbowSeries', newSeries.toString());
@@ -816,7 +812,7 @@ const HomeScreen = () => {
         <SettingsScreen setSelectedRainbowScreen={setSelectedRainbowScreen} isRainbowNotificationEnabled={isRainbowNotificationEnabled} setRainbowNotificationEnabled={setRainbowNotificationEnabled}
         />
       ) : selectedRainbowScreen === 'Game' ? (
-        <CatchScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} isRainbowGameStarted={isRainbowGameStarted} setIsRainbowGameStarted={setIsRainbowGameStarted}
+        <RainbowLepreGameScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} isRainbowGameStarted={isRainbowGameStarted} setIsRainbowGameStarted={setIsRainbowGameStarted}
         />
       ) : selectedRainbowScreen === 'Calendar' ? (
         <RainbowCalendarScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} />
