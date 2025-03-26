@@ -721,7 +721,6 @@ const HomeScreen = () => {
                   width: '100%',
                   justifyContent: 'space-between',
                   paddingHorizontal: dimensions.width * 0.0104,
-                  justifyContent: 'center',
                 }}>
                   <Text style={{
                     maxWidth: dimensions.width * 0.7,
@@ -730,6 +729,7 @@ const HomeScreen = () => {
                     textAlign: 'left',
                     fontFamily: fontDMSansRegular,
                     color: 'white',
+                    maxWidth: dimensions.width * 0.77,
                   }}
                   >
                     {selectedHabit?.title}
