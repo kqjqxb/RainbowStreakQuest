@@ -22,6 +22,8 @@ import BerlinWishlistsScreen from './BerlinWishlistsScreen';
 import CasScreen from './CasScreen';
 import LoadingBerlinTravelHelperScreen from './LoadingBerlinTravelHelperScreen';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
+import CatchScreen from './CatchScreen';
+import RainbowCalendarScreen from './RainbowCalendarScreen';
 
 const homeRainbowScreensButtons = [
   {
@@ -30,12 +32,12 @@ const homeRainbowScreensButtons = [
     rainbowScreenTitle: 'Tracking',
   },
   {
-    rainbowScreen: 'Casino',
+    rainbowScreen: 'Calendar',
     rainbowWhiteIcon: require('../assets/icons/rainbowButtons/calendarIcon.png'),
     rainbowScreenTitle: 'Calendar',
   },
   {
-    rainbowScreen: 'Checklists',
+    rainbowScreen: 'Game',
     rainbowWhiteIcon: require('../assets/icons/rainbowButtons/gameIcon.png'),
     rainbowScreenTitle: 'Game',
   },
@@ -67,11 +69,11 @@ const HomeScreen = () => {
   const [isHabitVisible, setIsHabitVisible] = useState(false);
   const [selectedHabit, setSelectedHabit] = useState(null);
   const [isRainbowNotificationEnabled, setRainbowNotificationEnabled] = useState(true);
+  const [isRainbowGameStarted, setIsRainbowGameStarted] = useState(false);
 
-  const [favorites, setFavorites] = useState([]);
   const rainbowScrollViewRef = useRef(null);
 
-  const loadReginasSettings = async () => {
+  const loadRainbowSettings = async () => {
     try {
       const notificationRainbowValue = await AsyncStorage.getItem('isRainbowNotificationEnabled');
 
@@ -82,7 +84,7 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    loadReginasSettings();
+    loadRainbowSettings();
   }, [isRainbowNotificationEnabled, selectedRainbowScreen]);
 
   useEffect(() => {
@@ -102,10 +104,10 @@ const HomeScreen = () => {
     });
   };
 
-  const handleDeleteBerlWlistImage = () => {
+  const handleDeleteRainbowHabitImage = () => {
     Alert.alert(
       "Delete image",
-      "Are you sure you want to delete image of your wishlist item?",
+      "Really delete image of your habit?",
       [
         {
           text: "Cancel",
@@ -201,9 +203,12 @@ const HomeScreen = () => {
     }
   };
 
-  // Додайте цю функцію всередині компонента HomeScreen:
   const handleMarkAsDone = async () => {
     if (!selectedHabit) return;
+
+    // Зберігаємо попередній статус вибраної звички для визначення delta
+    const wasDone = selectedHabit.status === 'done';
+
     const updatedHabits = rainbowHabbits.map(habit => {
       if (habit.id === selectedHabit.id) {
         const newStatus = habit.status === 'done' ? 'not done' : 'done';
@@ -212,8 +217,20 @@ const HomeScreen = () => {
       return habit;
     });
     setRainbowHabbits(updatedHabits);
+
     try {
       await AsyncStorage.setItem('rainbowHabbits', JSON.stringify(updatedHabits));
+
+      // Отримуємо поточне значення rainbowSeries (як число)
+      const currentSeriesString = await AsyncStorage.getItem('rainbowSeries');
+      const currentSeries = currentSeriesString ? parseInt(currentSeriesString, 10) : 0;
+
+      // Якщо звичка переходить з not done -> done (wasDone === false), додаємо 1,
+      // якщо з done -> not done (wasDone === true), віднімаємо 1.
+      const delta = wasDone ? -1 : 1;
+      const newSeries = currentSeries + delta;
+      await AsyncStorage.setItem('rainbowSeries', newSeries.toString());
+
       setIsHabitVisible(false);
     } catch (error) {
       console.error('Error updating habit status', error);
@@ -224,11 +241,10 @@ const HomeScreen = () => {
     const scheduleMidnightUpdate = () => {
       const now = new Date();
       const nextMidnight = new Date(now);
-      nextMidnight.setHours(24, 0, 0, 0); // встановлюємо час 00:00 наступного дня
+      nextMidnight.setHours(24, 0, 0, 0);
       const msUntilMidnight = nextMidnight - now;
 
       const timerId = setTimeout(async () => {
-        // Оновлюємо всі звички статусом "done"
         const updatedHabits = rainbowHabbits.map(habit => ({ ...habit, status: 'done' }));
         setRainbowHabbits(updatedHabits);
         try {
@@ -236,9 +252,7 @@ const HomeScreen = () => {
         } catch (error) {
           console.error('Error updating habits at midnight', error);
         }
-        // Автоматично перемикаємо selectedDay на наступну дату
         setSelectedDay(new Date(nextMidnight));
-        // Переплановуємо оновлення для наступного дня
         scheduleMidnightUpdate();
       }, msUntilMidnight);
 
@@ -801,18 +815,18 @@ const HomeScreen = () => {
       ) : selectedRainbowScreen === 'Settings' ? (
         <SettingsScreen setSelectedRainbowScreen={setSelectedRainbowScreen} isRainbowNotificationEnabled={isRainbowNotificationEnabled} setRainbowNotificationEnabled={setRainbowNotificationEnabled}
         />
-      ) : selectedRainbowScreen === 'EventDetails' ? (
-        <BerlinPlaceDetailsScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} favorites={favorites} setFavorites={setFavorites}
+      ) : selectedRainbowScreen === 'Game' ? (
+        <CatchScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} isRainbowGameStarted={isRainbowGameStarted} setIsRainbowGameStarted={setIsRainbowGameStarted}
         />
-      ) : selectedRainbowScreen === 'Casino' ? (
-        <CasScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen}  />
+      ) : selectedRainbowScreen === 'Calendar' ? (
+        <RainbowCalendarScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} />
       ) : selectedRainbowScreen === 'Checklists' ? (
         <BerlinWishlistsScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} />
       ) : selectedRainbowScreen === 'LoadingBerlin' ? (
         <LoadingBerlinTravelHelperScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} />
       ) : null}
 
-      {selectedRainbowScreen !== 'LoadingBerlin' && (
+      {selectedRainbowScreen !== 'LoadingBerlin' && !(selectedRainbowScreen === 'Game' && isRainbowGameStarted) && (
         <View
           style={{
             width: dimensions.width,
@@ -981,7 +995,7 @@ const HomeScreen = () => {
               ) : (
                 <TouchableOpacity
                   onPress={() => {
-                    handleDeleteBerlWlistImage();
+                    handleDeleteRainbowHabitImage();
                   }}
                   style={{
                     alignSelf: 'center',
