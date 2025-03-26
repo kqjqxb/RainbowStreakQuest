@@ -14,66 +14,65 @@ import { ChevronRightIcon } from 'react-native-heroicons/solid';
 
 const fontSfProTextRegular = 'SFProText-Regular';
 
-const privacyBerlinAndTermsBtns = [
+const TermsAndPrivacyRainbowBtns = [
     {
         id: 2,
-        title: 'Privacy Policy',
-        link: '',
-        image: require('../assets/images/settingsImages/privacyImage.png'),
+        rainbBtnTitle: 'Privacy Policy',
+        rainbBtnLink: '',
+        rainbBtnImage: require('../assets/images/settingsImages/privacyImage.png'),
     },
     {
         id: 1,
-        title: 'Terms of Use',
-        link: '',
-        image: require('../assets/images/settingsImages/termsOfUseImage.png'),
+        rainbBtnTitle: 'Terms of Use',
+        rainbBtnLink: '',
+        rainbBtnImage: require('../assets/images/settingsImages/termsOfUseImage.png'),
     },
 ]
 
 const SettingsScreen = ({ selectedRainbowScreen, isRainbowNotificationEnabled, setRainbowNotificationEnabled, }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
 
-
-    const toggleNotificationSwitch = () => {
+    const toggleRainbNotificationSwitch = () => {
         const newValue = !isRainbowNotificationEnabled;
         setRainbowNotificationEnabled(newValue);
-        saveSettings('isRainbowNotificationEnabled', newValue);
+        saveRainbowSettings('isRainbowNotificationEnabled', newValue);
     };
-    const saveSettings = async (key, value) => {
+    const saveRainbowSettings = async (key, value) => {
         try {
             await AsyncStorage.setItem(key, JSON.stringify(value));
         } catch (error) {
-            console.error("Error saving settings:", error);
+            console.error("Error saving rainbow settings:", error);
         }
     };
 
     return (
         <View style={{
-            justifyContent: 'flex-start',
+            width: '100%',
             flex: 1,
             zIndex: 1,
-            width: '100%',
+            width: dimensions.width,
             alignItems: 'center',
             position: 'relative',
-            width: dimensions.width,
+            justifyContent: 'flex-start',
         }}>
             <SafeAreaView style={{
-                width: dimensions.width,
-                alignSelf: 'center',
+                backgroundColor: '#1AAC4B',
                 marginBottom: dimensions.height * 0.01,
                 justifyContent: 'center',
+                alignSelf: 'center',
                 alignItems: 'center',
-                backgroundColor: '#1AAC4B',
+                width: dimensions.width,
             }}>
                 <Text style={{
-                    textAlign: 'center',
-                    fontFamily: fontSfProTextRegular,
+                    alignSelf: 'flex-start',
                     fontWeight: 700,
                     fontSize: dimensions.width * 0.061,
                     alignItems: 'center',
-                    alignSelf: 'flex-start',
-                    paddingLeft: dimensions.width * 0.05,
                     color: 'white',
                     paddingBottom: dimensions.height * 0.014,
+                    fontFamily: fontSfProTextRegular,
+                    paddingLeft: dimensions.width * 0.05,
+                    textAlign: 'center',
                 }}
                 >
                     Settings
@@ -81,19 +80,19 @@ const SettingsScreen = ({ selectedRainbowScreen, isRainbowNotificationEnabled, s
             </SafeAreaView>
 
             <View style={{
-                flexDirection: 'row',
+                borderBottomColor: 'rgba(153, 153, 153, 0.7)',
                 justifyContent: 'space-between',
-                alignItems: 'center',
                 paddingVertical: dimensions.height * 0.019,
                 marginBottom: dimensions.height * 0.008,
-                borderBottomColor: 'rgba(153, 153, 153, 0.7)',
                 borderBottomWidth: dimensions.height * 0.001,
+                flexDirection: 'row',
                 width: dimensions.width * 0.9,
+                alignItems: 'center',
             }}>
                 <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
                     justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
                 }}>
                     <Image
                         source={require('../assets/images/settingsImages/notificationsImage.png')}
@@ -105,12 +104,12 @@ const SettingsScreen = ({ selectedRainbowScreen, isRainbowNotificationEnabled, s
                     />
                     <Text
                         style={{
-                            fontWeight: 400,
-                            textAlign: 'center',
                             color: 'white',
+                            fontWeight: 400,
                             fontSize: dimensions.width * 0.043,
-                            fontFamily: fontSfProTextRegular,
                             marginLeft: dimensions.width * 0.03,
+                            textAlign: 'center',
+                            fontFamily: fontSfProTextRegular,
                         }}>
                         Notifications
                     </Text>
@@ -119,29 +118,29 @@ const SettingsScreen = ({ selectedRainbowScreen, isRainbowNotificationEnabled, s
                     trackColor={{ false: '#948ea0', true: '#FDB938' }}
                     thumbColor={'white'}
                     ios_backgroundColor="#3E3E3E"
-                    onValueChange={toggleNotificationSwitch}
+                    onValueChange={toggleRainbNotificationSwitch}
                     value={isRainbowNotificationEnabled}
                 />
             </View>
 
-            {privacyBerlinAndTermsBtns.map((button) => (
+            {TermsAndPrivacyRainbowBtns.map((button) => (
                 <TouchableOpacity
                     key={button.id}
                     onPress={() => {
-                        Linking.openURL(button.link);
+                        Linking.openURL(button.rainbBtnLink);
                     }}
                     style={{
-                        alignItems: 'center',
+                        justifyContent: 'space-between',
                         borderRadius: dimensions.width * 0.034,
                         flexDirection: 'row',
-                        paddingVertical: dimensions.height * 0.019,
-                        alignSelf: 'center',
+                        borderBottomWidth: dimensions.height * 0.001,
                         width: dimensions.width * 0.93,
                         paddingHorizontal: dimensions.width * 0.015,
-                        justifyContent: 'space-between',
+                        alignSelf: 'center',
+                        paddingVertical: dimensions.height * 0.019,
                         marginBottom: dimensions.height * 0.008,
+                        alignItems: 'center',
                         borderBottomColor: 'rgba(153, 153, 153, 0.7)',
-                        borderBottomWidth: dimensions.height * 0.001
                     }}
                 >
                     <View style={{
@@ -150,7 +149,7 @@ const SettingsScreen = ({ selectedRainbowScreen, isRainbowNotificationEnabled, s
                         justifyContent: 'center',
                     }}>
                         <Image
-                            source={button.image}
+                            source={button.rainbBtnImage}
                             style={{
                                 height: dimensions.height * 0.03,
                                 width: dimensions.height * 0.03,
@@ -159,14 +158,14 @@ const SettingsScreen = ({ selectedRainbowScreen, isRainbowNotificationEnabled, s
                         />
                         <Text
                             style={{
-                                fontWeight: 400,
+                                marginLeft: dimensions.width * 0.03,
                                 textAlign: 'center',
                                 color: 'white',
-                                fontSize: dimensions.width * 0.043,
                                 fontFamily: fontSfProTextRegular,
-                                marginLeft: dimensions.width * 0.03,
+                                fontSize: dimensions.width * 0.043,
+                                fontWeight: 400,
                             }}>
-                            {button.title}
+                            {button.rainbBtnTitle}
                         </Text>
                     </View>
                     <ChevronRightIcon size={dimensions.height * 0.03} color='white' />

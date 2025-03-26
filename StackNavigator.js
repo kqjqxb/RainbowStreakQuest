@@ -12,7 +12,6 @@ import { Provider, useDispatch } from 'react-redux';
 import store from './src/redux/store';
 import { loadUserData } from './src/redux/userSlice';
 
-
 const Stack = createNativeStackNavigator();
 
 const RainbowStreakQuestStack = () => {
@@ -79,6 +78,5 @@ const AppNavigator = () => {
     </NavigationContainer>
   );
 };
-
 
 export default RainbowStreakQuestStack;

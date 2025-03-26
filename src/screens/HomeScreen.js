@@ -17,9 +17,6 @@ import * as ImagePicker from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import SettingsScreen from './SettingsScreen';
-import BerlinPlaceDetailsScreen from './BerlinPlaceDetailsScreen';
-import BerlinWishlistsScreen from './BerlinWishlistsScreen';
-import CasScreen from './CasScreen';
 import LoadingBerlinTravelHelperScreen from './LoadingBerlinTravelHelperScreen';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
 import RainbowLepreGameScreen from './RainbowLepreGameScreen';
@@ -54,7 +51,7 @@ const fontDMSansRegular = 'DMSans-Regular';
 const HomeScreen = () => {
 
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-  const [selectedRainbowScreen, setSelectedRainbowScreen] = useState('Home');
+  const [selectedRainbowScreen, setSelectedRainbowScreen] = useState('LoadingRainbow');
 
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [rainbowHabbits, setRainbowHabbits] = useState([]);
@@ -93,11 +90,11 @@ const HomeScreen = () => {
     }
   }, [selectedDay]);
 
-  const handleBerlWlistImagePicker = () => {
+  const handleRainbowImagePicker = () => {
     ImagePicker.launchImageLibrary({ mediaType: 'photo' }, (response) => {
       if (response.didCancel) {
       } else if (response.error) {
-        console.log('Berlin Travel Helper ImagePicker Error: ', response.error);
+        console.log('Rainbow ImagePicker catched Error: ', response.error);
       } else {
         setCoverImage(response.assets[0].uri);
       }
@@ -124,10 +121,6 @@ const HomeScreen = () => {
     );
   };
 
-  useEffect(() => {
-    console.log('rainbowHabbits', rainbowHabbits);
-  }, [setRainbowHabbits,]);
-
   const saveRainbowHabbit = async () => {
     try {
       const existingRainbowHabbits = await AsyncStorage.getItem('rainbowHabbits');
@@ -135,7 +128,7 @@ const HomeScreen = () => {
 
       const maxRainbHabitId = rainbowHabbits.length > 0 ? Math.max(...rainbowHabbits.map(bwList => bwList.id)) : 0;
 
-      const newBerlinWishlist = {
+      const newRainbowHabit = {
         id: maxRainbHabitId + 1,
         image: coverImage,
         title: rainbHabitTitle,
@@ -147,7 +140,7 @@ const HomeScreen = () => {
         status: 'not done'
       };
 
-      rainbowHabbits.unshift(newBerlinWishlist);
+      rainbowHabbits.unshift(newRainbowHabit);
 
       setRainbowHabbits(rainbowHabbits);
 
@@ -181,16 +174,12 @@ const HomeScreen = () => {
     loadRainbowHabbits();
   }, [rainbowHabbits, selectedRainbowScreen]);
 
-  useEffect(() => {
-    console.log('selectedDay', selectedDay);
-  }, [selectedDay]);
-
   const toggleReminderSwitch = () => {
     const newValue = !isRainbReminder;
     setIsRainbReminder(newValue);
   };
 
-  const handleTimeChange = (event, selectedTime) => {
+  const handleRainbowTimeChange = (event, selectedTime) => {
     if (selectedTime) {
       const now = new Date();
       if (selectedDay.toDateString() === now.toDateString()) {
@@ -261,24 +250,23 @@ const HomeScreen = () => {
 
   return (
     <View style={{
-      flex: 1,
+      width: dimensions.width,
       alignItems: 'center',
       backgroundColor: '#268A42',
-      width: dimensions.width
+      flex: 1,
     }}>
-
       {selectedRainbowScreen === 'Home' ? (
         <View style={{
-          width: dimensions.width,
           height: dimensions.height,
+          width: dimensions.width,
         }}>
           <SafeAreaView style={{
-            width: dimensions.width,
             alignSelf: 'center',
+            backgroundColor: '#1AAC4B',
+            alignItems: 'center',
             marginBottom: dimensions.height * 0.01,
             justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#1AAC4B',
+            width: dimensions.width,
           }}>
             {isHabitVisible ? (
               <TouchableOpacity
@@ -286,23 +274,22 @@ const HomeScreen = () => {
                   setIsHabitVisible(false);
                 }}
                 style={{
-                  flexDirection: 'row',
                   justifyContent: 'center',
                   alignItems: 'center',
                   alignSelf: 'flex-start',
-                  paddingBottom: dimensions.height * 0.014,
                   paddingHorizontal: dimensions.width * 0.03,
+                  paddingBottom: dimensions.height * 0.014,
+                  flexDirection: 'row',
                 }}>
                 <ChevronLeftIcon size={dimensions.height * 0.034} color='white' />
                 <Text style={{
-                  textAlign: 'center',
-                  fontFamily: fontDMSansRegular,
+                  alignItems: 'center',
                   fontWeight: 700,
                   fontSize: dimensions.width * 0.061,
-                  alignItems: 'center',
+                  textAlign: 'center',
                   alignSelf: 'flex-start',
                   color: 'white',
-
+                  fontFamily: fontDMSansRegular,
                 }}
                 >
                   Info
@@ -310,21 +297,20 @@ const HomeScreen = () => {
               </TouchableOpacity>
             ) : (
               <Text style={{
+                paddingBottom: dimensions.height * 0.014,
                 textAlign: 'center',
                 fontFamily: fontDMSansRegular,
-                fontWeight: 700,
                 fontSize: dimensions.width * 0.061,
                 alignItems: 'center',
                 alignSelf: 'flex-start',
                 paddingLeft: dimensions.width * 0.05,
+                fontWeight: 700,
                 color: 'white',
-                paddingBottom: dimensions.height * 0.014,
               }}
               >
                 Habit Tracking
               </Text>
             )}
-
           </SafeAreaView>
 
           {!isHabitVisible ? (
@@ -336,21 +322,21 @@ const HomeScreen = () => {
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
                   style={{
-                    width: dimensions.width,
-                    alignSelf: 'center',
                     paddingLeft: dimensions.width * 0.05,
+                    alignSelf: 'center',
+                    width: dimensions.width,
                   }}
                   contentContainerStyle={{
                     paddingRight: dimensions.width * 0.1,
                   }}
                 >
                   <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
+                    marginRight: dimensions.width * 0.25,
                     alignItems: 'center',
                     width: dimensions.width * 0.9,
+                    justifyContent: 'space-between',
                     alignSelf: 'center',
-                    marginRight: dimensions.width * 0.25,
+                    flexDirection: 'row',
                   }}>
                     {Array.from({ length: 7 }, (_, i) => {
                       const date = new Date();
@@ -367,36 +353,35 @@ const HomeScreen = () => {
                           key={index}
                           onPress={() => setSelectedDay(dateObj.date)}
                           style={{
-                            backgroundColor: isSelected ? '#FDB938' : '#1AAC4B',
+                            alignItems: 'center',
                             borderRadius: dimensions.width * 0.1,
                             width: dimensions.width * 0.16,
                             height: dimensions.height * 0.1,
+                            backgroundColor: isSelected ? '#FDB938' : '#1AAC4B',
                             justifyContent: 'center',
-                            alignItems: 'center',
                             marginRight: dimensions.width * 0.016,
                           }}
                         >
                           <Text
                             style={{
-                              fontFamily: fontSfProTextRegular,
-                              textAlign: 'center',
+                              opacity: 0.55,
                               fontSize: dimensions.width * 0.037,
+                              textAlign: 'center',
                               fontWeight: 700,
                               color: isSelected ? '#393E42' : 'white',
-                              opacity: 0.55,
-
+                              fontFamily: fontSfProTextRegular,
                             }}
                           >
                             {dateObj.dayOfWeek}
                           </Text>
                           <Text
                             style={{
-                              fontFamily: fontSfProTextRegular,
+                              marginTop: dimensions.height * 0.004,
                               textAlign: 'center',
+                              color: isSelected ? '#393E42' : 'white',
                               fontSize: dimensions.width * 0.043,
                               fontWeight: 700,
-                              color: isSelected ? '#393E42' : 'white',
-                              marginTop: dimensions.height * 0.004,
+                              fontFamily: fontSfProTextRegular,
                             }}
                           >
                             {dateObj.day}
@@ -422,26 +407,26 @@ const HomeScreen = () => {
                 return true;
               }).length === 0 ? (
                 <View style={{
-                  width: dimensions.width,
+                  justifyContent: 'flex-end',
                   height: dimensions.height * 0.77,
                   alignSelf: 'center',
-                  justifyContent: 'flex-end',
+                  width: dimensions.width,
                 }}>
                   <View style={{
-                    width: dimensions.width * 0.9,
+                    bottom: dimensions.height * 0.1,
                     position: 'absolute',
                     alignSelf: 'center',
-                    bottom: dimensions.height * 0.1,
+                    width: dimensions.width * 0.9,
                   }}>
                     <Text
                       style={{
-                        fontFamily: fontSfProTextRegular,
-                        textAlign: 'center',
+                        bottom: -dimensions.height * 0.07,
                         fontSize: dimensions.width * 0.046,
                         fontWeight: 400,
+                        textAlign: 'center',
                         color: 'white',
                         paddingHorizontal: dimensions.width * 0.1,
-                        bottom: -dimensions.height * 0.07,
+                        fontFamily: fontSfProTextRegular,
                       }}
                     >
                       There are no habits here yet, it's time to create one!
@@ -450,10 +435,10 @@ const HomeScreen = () => {
                     <Image
                       source={require('../assets/images/homePersImage.png')}
                       style={{
-                        width: dimensions.width * 0.4,
+                        marginTop: dimensions.height * 0.05,
                         height: dimensions.height * 0.4,
                         alignSelf: 'flex-start',
-                        marginTop: dimensions.height * 0.05,
+                        width: dimensions.width * 0.4,
                       }}
                       resizeMode='contain'
                     />
@@ -472,12 +457,12 @@ const HomeScreen = () => {
                     }}
                   >
                     <View style={{
-                      width: dimensions.width * 0.93,
+                      justifyContent: 'flex-start',
                       alignSelf: 'center',
                       flexDirection: 'row',
-                      marginTop: dimensions.height * 0.021,
                       alignItems: 'center',
-                      justifyContent: 'flex-start',
+                      marginTop: dimensions.height * 0.021,
+                      width: dimensions.width * 0.93,
                     }}>
                       <Image
                         source={require('../assets/images/userHasHabitsImage.png')}
@@ -489,19 +474,19 @@ const HomeScreen = () => {
                       />
 
                       <View style={{
-                        marginLeft: dimensions.width * 0.03,
-                        justifyContent: 'flex-start',
-                        alignItems: 'flex-start',
                         alignSelf: 'flex-start',
+                        justifyContent: 'flex-start',
+                        marginLeft: dimensions.width * 0.03,
+                        alignItems: 'flex-start',
                       }}>
                         <Text
                           style={{
-                            fontFamily: fontSfProTextRegular,
                             textAlign: 'left',
-                            fontSize: dimensions.width * 0.037,
-                            fontWeight: 700,
-                            color: 'white',
                             alignSelf: 'flex-start',
+                            fontWeight: 700,
+                            fontSize: dimensions.width * 0.037,
+                            color: 'white',
+                            fontFamily: fontSfProTextRegular,
                           }}
                         >
                           You have {rainbowHabbits.filter(habit => {
@@ -524,9 +509,9 @@ const HomeScreen = () => {
                             fontFamily: fontSfProTextRegular,
                             textAlign: 'left',
                             fontSize: dimensions.width * 0.034,
+                            alignSelf: 'flex-start',
                             fontWeight: 400,
                             color: 'white',
-                            alignSelf: 'flex-start',
                             marginTop: dimensions.height * 0.01,
                           }}
                         >
@@ -551,22 +536,22 @@ const HomeScreen = () => {
                       return true;
                     }).map((rainbowHabit, index) => (
                       <View key={rainbowHabit.id} style={{
-                        width: dimensions.width * 0.93,
-                        alignSelf: 'center',
-                        flexDirection: 'row',
-                        marginBottom: dimensions.height * 0.016,
-                        backgroundColor: '#1AAC4B',
                         borderRadius: dimensions.width * 0.04,
-                        paddingHorizontal: dimensions.width * 0.04,
+                        alignSelf: 'center',
+                        marginBottom: dimensions.height * 0.016,
                         paddingVertical: dimensions.height * 0.016,
+                        backgroundColor: '#1AAC4B',
+                        flexDirection: 'row',
+                        paddingHorizontal: dimensions.width * 0.04,
+                        width: dimensions.width * 0.93,
                         alignItems: 'center',
                       }}>
                         <Image
                           source={{ uri: rainbowHabit.image }}
                           style={{
-                            width: dimensions.width * 0.25,
                             height: dimensions.width * 0.25,
                             borderRadius: dimensions.width * 0.03,
+                            width: dimensions.width * 0.25,
                           }}
                           resizeMode='stretch'
                         />
@@ -578,20 +563,20 @@ const HomeScreen = () => {
                           }
                           style={{
                             width: dimensions.width * 0.048,
-                            height: dimensions.width * 0.048,
+                            right: dimensions.width * 0.037,
                             zIndex: 50,
                             position: 'absolute',
                             top: dimensions.height * 0.016,
-                            right: dimensions.width * 0.037,
+                            height: dimensions.width * 0.048,
                           }}
                           resizeMode='contain'
                         />
 
                         <View style={{
-                          marginLeft: dimensions.width * 0.04,
+                          alignSelf: 'flex-start',
                           justifyContent: 'space-between',
                           alignItems: 'flex-start',
-                          alignSelf: 'flex-start',
+                          marginLeft: dimensions.width * 0.04,
                         }}>
                           <View style={{
                             alignItems: 'center',
@@ -600,13 +585,13 @@ const HomeScreen = () => {
                           }}>
                             <Text
                               style={{
-                                fontFamily: fontSfProTextRegular,
-                                textAlign: 'left',
-                                alignSelf: 'flex-start',
-                                fontSize: dimensions.width * 0.046,
                                 color: 'white',
-                                fontWeight: 700,
+                                textAlign: 'left',
                                 maxWidth: dimensions.width * 0.5,
+                                fontSize: dimensions.width * 0.046,
+                                alignSelf: 'flex-start',
+                                fontWeight: 700,
+                                fontFamily: fontSfProTextRegular,
                               }}
                               numberOfLines={1}
                               ellipsizeMode='tail'
@@ -616,13 +601,13 @@ const HomeScreen = () => {
 
                             <Text
                               style={{
-                                fontFamily: fontSfProTextRegular,
-                                textAlign: 'left',
-                                alignSelf: 'flex-start',
                                 fontSize: dimensions.width * 0.04,
-                                fontWeight: 400,
+                                alignSelf: 'flex-start',
+                                fontFamily: fontSfProTextRegular,
                                 color: 'white',
+                                textAlign: 'left',
                                 marginTop: dimensions.height * 0.01,
+                                fontWeight: 400,
                                 maxWidth: dimensions.width * 0.5,
                               }}
                               numberOfLines={1}
@@ -638,21 +623,21 @@ const HomeScreen = () => {
                               setIsHabitVisible(true);
                             }}
                             style={{
-                              backgroundColor: '#FDB938',
-                              borderRadius: dimensions.width * 0.5,
+                              justifyContent: 'center',
+                              width: dimensions.width * 0.4,
                               height: dimensions.height * 0.043,
                               alignItems: 'center',
-                              justifyContent: 'center',
+                              borderRadius: dimensions.width * 0.5,
                               alignSelf: 'flex-start',
-                              width: dimensions.width * 0.4,
+                              backgroundColor: '#FDB938',
                             }}>
                             <Text
                               style={{
-                                fontFamily: fontSfProTextRegular,
-                                textAlign: 'center',
-                                fontSize: dimensions.width * 0.04,
                                 fontWeight: 400,
+                                textAlign: 'center',
+                                fontFamily: fontSfProTextRegular,
                                 color: '#393E42',
+                                fontSize: dimensions.width * 0.04,
                               }}
                             >
                               Read more
@@ -661,7 +646,6 @@ const HomeScreen = () => {
                         </View>
                       </View>
                     ))}
-
                   </ScrollView>
                 </>
               )}
@@ -670,10 +654,10 @@ const HomeScreen = () => {
                   setModalVisible(true);
                 }}
                 style={{
-                  position: 'absolute',
-                  bottom: dimensions.height * 0.14,
-                  right: dimensions.width * 0.05,
                   alignSelf: 'flex-end',
+                  right: dimensions.width * 0.05,
+                  bottom: dimensions.height * 0.14,
+                  position: 'absolute',
                 }}>
                 <Image
                   source={require('../assets/images/plusImage.png')}
@@ -689,40 +673,40 @@ const HomeScreen = () => {
           ) : (
             <>
               <View style={{
-                width: dimensions.width * 0.93,
-                alignSelf: 'center',
-                backgroundColor: '#1AAC4B',
-                borderRadius: dimensions.width * 0.04,
-                paddingHorizontal: dimensions.width * 0.04,
                 paddingVertical: dimensions.height * 0.016,
+                alignSelf: 'center',
+                paddingHorizontal: dimensions.width * 0.04,
+                backgroundColor: '#1AAC4B',
+                width: dimensions.width * 0.93,
                 marginTop: dimensions.height * 0.016,
+                borderRadius: dimensions.width * 0.04,
               }}>
                 <Image
                   source={{ uri: selectedHabit?.image }}
                   style={{
-                    width: dimensions.width * 0.84,
+                    borderRadius: dimensions.width * 0.03,
                     height: dimensions.height * 0.21,
                     alignSelf: 'center',
-                    borderRadius: dimensions.width * 0.03,
+                    width: dimensions.width * 0.84,
                   }}
                   resizeMode='stretch'
                 />
 
                 <View style={{
-                  width: dimensions.width * 0.16,
-                  marginTop: dimensions.height * 0.019,
                   height: dimensions.height * 0.025,
+                  marginTop: dimensions.height * 0.019,
+                  borderRadius: dimensions.width * 0.5,
                   alignItems: 'center',
                   justifyContent: 'center',
                   backgroundColor: '#FDB938',
-                  borderRadius: dimensions.width * 0.5,
+                  width: dimensions.width * 0.16,
                 }}>
                   <Text style={{
-                    textAlign: 'center',
-                    fontFamily: fontDMSansRegular,
                     fontWeight: 400,
+                    fontFamily: fontDMSansRegular,
                     fontSize: dimensions.width * 0.032,
                     color: 'white',
+                    textAlign: 'center',
                   }}
                   >
                     {selectedHabit?.executionFrequencies}
@@ -730,21 +714,21 @@ const HomeScreen = () => {
                 </View>
 
                 <View style={{
-                  width: '100%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  justifyContent: 'space-between',
                   flexDirection: 'row',
                   marginTop: dimensions.height * 0.019,
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  width: '100%',
+                  justifyContent: 'space-between',
                   paddingHorizontal: dimensions.width * 0.0104,
+                  justifyContent: 'center',
                 }}>
                   <Text style={{
-                    textAlign: 'left',
-                    fontFamily: fontDMSansRegular,
+                    maxWidth: dimensions.width * 0.7,
                     fontWeight: 400,
                     fontSize: dimensions.width * 0.048,
-                    maxWidth: dimensions.width * 0.7,
+                    textAlign: 'left',
+                    fontFamily: fontDMSansRegular,
                     color: 'white',
                   }}
                   >
@@ -767,14 +751,14 @@ const HomeScreen = () => {
 
                 {selectedHabit?.skipBy !== '' && (
                   <Text style={{
-                    textAlign: 'flex-start',
-                    fontFamily: fontDMSansRegular,
+                    marginTop: dimensions.height * 0.014,
                     fontWeight: 400,
                     fontSize: dimensions.width * 0.04,
                     alignItems: 'left',
+                    textAlign: 'flex-start',
                     paddingLeft: dimensions.width * 0.01,
                     color: 'white',
-                    marginTop: dimensions.height * 0.014,
+                    fontFamily: fontDMSansRegular,
                   }}
                   >
                     Skip by {selectedHabit?.skipBy}
@@ -784,26 +768,25 @@ const HomeScreen = () => {
                 <TouchableOpacity
                   onPress={handleMarkAsDone}
                   style={{
-                    width: dimensions.width * 0.84,
-                    alignSelf: 'center',
-                    justifyContent: 'center',
                     height: dimensions.height * 0.059,
+                    alignSelf: 'center',
+                    marginTop: dimensions.height * 0.019,
+                    justifyContent: 'center',
                     borderRadius: dimensions.width * 0.5,
                     backgroundColor: '#B71F1D',
-                    marginTop: dimensions.height * 0.019,
+                    width: dimensions.width * 0.84,
                   }}>
                   <Text style={{
-                    textAlign: 'center',
-                    fontFamily: fontDMSansRegular,
-                    fontWeight: 400,
-                    fontSize: dimensions.width * 0.037,
                     color: 'white',
+                    fontFamily: fontDMSansRegular,
+                    fontSize: dimensions.width * 0.037,
+                    fontWeight: 400,
+                    textAlign: 'center',
                   }}
                   >
                     Mark as done
                   </Text>
                 </TouchableOpacity>
-
               </View>
             </>
           )}
@@ -816,28 +799,26 @@ const HomeScreen = () => {
         />
       ) : selectedRainbowScreen === 'Calendar' ? (
         <RainbowCalendarScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} />
-      ) : selectedRainbowScreen === 'Checklists' ? (
-        <BerlinWishlistsScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} />
-      ) : selectedRainbowScreen === 'LoadingBerlin' ? (
+      ) : selectedRainbowScreen === 'LoadingRainbow' ? (
         <LoadingBerlinTravelHelperScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} />
       ) : null}
 
-      {selectedRainbowScreen !== 'LoadingBerlin' && !(selectedRainbowScreen === 'Game' && isRainbowGameStarted) && (
+      {selectedRainbowScreen !== 'LoadingRainbow' && !(selectedRainbowScreen === 'Game' && isRainbowGameStarted) && (
         <View
           style={{
-            width: dimensions.width,
+            position: 'absolute',
             bottom: 0,
             height: dimensions.height * 0.12,
-            paddingHorizontal: dimensions.width * 0.03,
-            flexDirection: 'row',
+            alignSelf: 'center',
             backgroundColor: '#1AAC4B',
-            justifyContent: 'space-between',
+            flexDirection: 'row',
+            width: dimensions.width,
+            paddingBottom: dimensions.height * 0.025,
             alignItems: 'center',
             paddingTop: dimensions.height * 0.016,
-            alignSelf: 'center',
+            justifyContent: 'space-between',
             zIndex: 5000,
-            paddingBottom: dimensions.height * 0.025,
-            position: 'absolute',
+            paddingHorizontal: dimensions.width * 0.03,
           }}
         >
           {homeRainbowScreensButtons.map((button, index) => (
@@ -845,13 +826,13 @@ const HomeScreen = () => {
               key={index}
               onPress={() => setSelectedRainbowScreen(button.rainbowScreen)}
               style={{
+                width: dimensions.width * 0.23,
                 borderRadius: dimensions.width * 0.07,
-                padding: dimensions.height * 0.019,
                 alignItems: 'center',
+                height: dimensions.height * 0.088,
                 marginHorizontal: dimensions.width * 0.001,
                 backgroundColor: selectedRainbowScreen === button.rainbowScreen ? '#268A42' : 'transparent',
-                width: dimensions.width * 0.23,
-                height: dimensions.height * 0.088,
+                padding: dimensions.height * 0.019,
               }}
             >
               <Image
@@ -865,11 +846,11 @@ const HomeScreen = () => {
               />
               <Text
                 style={{
-                  fontWeight: 600,
-                  fontSize: dimensions.width * 0.034,
-                  color: 'white',
-                  fontFamily: fontDMSansRegular,
                   marginTop: dimensions.height * 0.008,
+                  fontSize: dimensions.width * 0.034,
+                  fontFamily: fontDMSansRegular,
+                  color: 'white',
+                  fontWeight: 600,
                 }}
               >
                 {button.rainbowScreenTitle}
@@ -882,54 +863,54 @@ const HomeScreen = () => {
       <Modal visible={modalVisible} transparent={true} animationType="slide">
         <View
           style={{
-            zIndex: 1000,
+            paddingHorizontal: dimensions.width * 0.05,
             alignSelf: 'center',
             width: '100%',
-            paddingHorizontal: dimensions.width * 0.05,
+            alignItems: 'center',
             width: dimensions.width,
             backgroundColor: '#268A42',
             height: dimensions.height,
-            alignItems: 'center',
+            zIndex: 1000,
           }}
         >
           <SafeAreaView style={{
-            width: dimensions.width,
-            alignSelf: 'center',
-            marginBottom: dimensions.height * 0.01,
-            justifyContent: 'center',
-            alignItems: 'center',
             backgroundColor: '#1AAC4B',
+            width: dimensions.width,
+            justifyContent: 'center',
+            marginBottom: dimensions.height * 0.01,
+            alignItems: 'center',
+            alignSelf: 'center',
           }}>
             <TouchableOpacity
               onPress={() => {
                 setModalVisible(false);
-                setCoverImage('');
+                setRainbSkipBy('');
                 setRainbHabitTitle('');
                 setRainbExecutionFrequencies('');
-                setRainbSkipBy('');
                 setIsRainbReminder(false);
                 setRainbReminderTime(new Date());
+                setCoverImage('');
               }}
               style={{
-                borderRadius: dimensions.width * 0.5,
-                zIndex: 100,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                alignSelf: 'flex-start',
-                paddingLeft: dimensions.width * 0.01,
                 paddingBottom: dimensions.height * 0.014,
+                alignSelf: 'flex-start',
+                zIndex: 100,
+                justifyContent: 'center',
+                flexDirection: 'row',
+                borderRadius: dimensions.width * 0.5,
+                alignItems: 'center',
+                paddingLeft: dimensions.width * 0.01,
               }}>
               <ChevronLeftIcon size={dimensions.height * 0.034} color='white' />
               <Text style={{
-                textAlign: 'center',
+                fontFamily: fontDMSansRegular,
                 color: 'white',
                 fontWeight: 600,
                 fontSize: dimensions.width * 0.05,
                 alignItems: 'center',
-                fontFamily: fontDMSansRegular,
                 alignSelf: 'center',
                 marginLeft: dimensions.width * 0.01,
+                textAlign: 'center',
               }}
               >
                 New habit
@@ -949,13 +930,13 @@ const HomeScreen = () => {
             }}
           >
             <Text style={{
-              color: 'white',
-              fontFamily: fontDMSansRegular,
+              textAlign: 'left',
               alignSelf: 'flex-start',
               fontWeight: 500,
               fontSize: dimensions.width * 0.043,
-              textAlign: 'left',
+              fontFamily: fontDMSansRegular,
               marginLeft: dimensions.width * 0.03,
+              color: 'white',
             }}
             >
               Cover
@@ -967,14 +948,14 @@ const HomeScreen = () => {
             }}>
               {coverImage === '' || !coverImage ? (
                 <TouchableOpacity
-                  onPress={() => handleBerlWlistImagePicker()}
+                  onPress={() => handleRainbowImagePicker()}
                   style={{
-                    marginTop: dimensions.height * 0.01,
-                    borderRadius: dimensions.width * 0.037,
-                    alignSelf: 'center',
-                    width: dimensions.width * 0.93,
                     height: dimensions.width * 0.41,
                     backgroundColor: 'white',
+                    alignSelf: 'center',
+                    borderRadius: dimensions.width * 0.037,
+                    width: dimensions.width * 0.93,
+                    marginTop: dimensions.height * 0.01,
                   }}>
                   <Image
                     source={require('../assets/icons/redPlusIcon.png')}
@@ -1001,9 +982,9 @@ const HomeScreen = () => {
                     source={{ uri: coverImage }}
                     style={{
                       height: dimensions.width * 0.41,
-                      borderRadius: dimensions.width * 0.037,
-                      alignSelf: 'center',
                       width: dimensions.width * 0.93,
+                      alignSelf: 'center',
+                      borderRadius: dimensions.width * 0.037,
                     }}
                     resizeMode='stretch'
                   />
@@ -1039,20 +1020,20 @@ const HomeScreen = () => {
                 onChangeText={setRainbHabitTitle}
                 placeholderTextColor="#B8B8B8"
                 style={{
-                  marginTop: dimensions.height * 0.01,
+                  flexDirection: 'row',
                   color: '#393E42',
                   justifyContent: 'space-between',
-                  paddingHorizontal: dimensions.width * 0.04,
                   backgroundColor: 'white',
                   borderRadius: dimensions.width * 0.03,
                   width: dimensions.width * 0.93,
-                  height: dimensions.height * 0.052,
-                  flexDirection: 'row',
-                  fontFamily: fontDMSansRegular,
+                  alignItems: 'center',
                   fontSize: rainbHabitTitle.length === 0 ? dimensions.width * 0.035 : dimensions.width * 0.039,
+                  paddingHorizontal: dimensions.width * 0.04,
+                  fontFamily: fontDMSansRegular,
+                  marginTop: dimensions.height * 0.01,
                   fontWeight: 400,
                   textAlign: 'left',
-                  alignItems: 'center',
+                  height: dimensions.height * 0.052,
                 }}
               />
 
@@ -1060,10 +1041,10 @@ const HomeScreen = () => {
                 color: 'white',
                 marginTop: dimensions.height * 0.03,
                 fontFamily: fontDMSansRegular,
-                alignSelf: 'flex-start',
-                fontWeight: 500,
                 fontSize: dimensions.width * 0.043,
+                fontWeight: 500,
                 textAlign: 'left',
+                alignSelf: 'flex-start',
               }}
               >
                 Execution frequencies
@@ -1082,22 +1063,22 @@ const HomeScreen = () => {
                     onPress={() => setRainbExecutionFrequencies(status)}
                     key={index}
                     style={{
-                      height: dimensions.height * 0.048,
-                      backgroundColor: rainbExecutionFrequencies === status ? '#B71F1D' : 'white',
+                      alignSelf: 'center',
+                      borderRadius: dimensions.width * 0.5,
                       alignItems: 'center',
                       justifyContent: 'center',
                       width: dimensions.width * 0.3,
-                      borderRadius: dimensions.width * 0.5,
+                      height: dimensions.height * 0.048,
+                      backgroundColor: rainbExecutionFrequencies === status ? '#B71F1D' : 'white',
                       marginTop: dimensions.height * 0.01,
-                      alignSelf: 'center',
                     }}>
                     <Text style={{
                       alignSelf: 'center',
-                      fontFamily: fontDMSansRegular,
                       fontWeight: 400,
                       fontSize: dimensions.width * 0.037,
-                      textAlign: 'left',
+                      fontFamily: fontDMSansRegular,
                       color: rainbExecutionFrequencies === status ? 'white' : '#151515',
+                      textAlign: 'left',
                     }}
                     >
                       {status}
@@ -1107,49 +1088,49 @@ const HomeScreen = () => {
               </View>
 
               <Text style={{
-                color: 'white',
-                marginTop: dimensions.height * 0.03,
+                fontSize: dimensions.width * 0.043,
                 fontFamily: fontDMSansRegular,
                 alignSelf: 'flex-start',
                 fontWeight: 500,
-                fontSize: dimensions.width * 0.043,
+                marginTop: dimensions.height * 0.03,
                 textAlign: 'left',
+                color: 'white',
               }}
               >
                 Skip by (optional)
               </Text>
 
               <View style={{
-                width: dimensions.width * 0.93,
+                marginTop: dimensions.height * 0.01,
                 flexDirection: 'row',
                 justifyContent: 'flex-start',
-                marginTop: dimensions.height * 0.01,
+                flexWrap: 'wrap',
                 alignItems: 'center',
                 alignSelf: 'center',
-                flexWrap: 'wrap',
+                width: dimensions.width * 0.93,
               }}>
                 {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((skipBy, index) => (
                   <TouchableOpacity
                     onPress={() => setRainbSkipBy(skipBy)}
                     key={index}
                     style={{
-                      height: dimensions.height * 0.048,
-                      backgroundColor: rainbSkipBy === skipBy ? '#B71F1D' : 'white',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      paddingHorizontal: dimensions.width * 0.04,
                       borderRadius: dimensions.width * 0.5,
-                      marginTop: dimensions.height * 0.01,
                       alignSelf: 'center',
+                      alignItems: 'center',
+                      paddingHorizontal: dimensions.width * 0.04,
+                      height: dimensions.height * 0.048,
+                      marginTop: dimensions.height * 0.01,
                       marginRight: dimensions.width * 0.01,
+                      justifyContent: 'center',
+                      backgroundColor: rainbSkipBy === skipBy ? '#B71F1D' : 'white',
                     }}>
                     <Text style={{
                       alignSelf: 'center',
-                      fontFamily: fontDMSansRegular,
+                      color: rainbSkipBy === skipBy ? 'white' : '#151515',
                       fontWeight: 400,
+                      fontFamily: fontDMSansRegular,
                       fontSize: dimensions.width * 0.037,
                       textAlign: 'left',
-                      color: rainbSkipBy === skipBy ? 'white' : '#151515',
                     }}
                     >
                       {skipBy}
@@ -1159,12 +1140,12 @@ const HomeScreen = () => {
               </View>
 
               <View style={{
-                width: dimensions.width * 0.93,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                alignSelf: 'center',
                 marginTop: dimensions.height * 0.03,
+                width: dimensions.width * 0.93,
+                alignItems: 'center',
+                flexDirection: 'row',
+                alignSelf: 'center',
+                justifyContent: 'space-between',
               }}>
                 <View style={{
                   flexDirection: 'row',
@@ -1182,13 +1163,13 @@ const HomeScreen = () => {
                     resizeMode='contain'
                   />
                   <Text style={{
-                    alignSelf: 'center',
+                    color: 'white',
                     fontFamily: fontDMSansRegular,
-                    fontWeight: 400,
                     fontSize: dimensions.width * 0.041,
                     textAlign: 'left',
-                    color: 'white',
+                    fontWeight: 400,
                     marginLeft: dimensions.width * 0.03,
+                    alignSelf: 'center',
                   }}
                   >
                     Remind about meals
@@ -1213,7 +1194,7 @@ const HomeScreen = () => {
                 textColor='white'
                 zIndex={1000}
                 onChange={(event, selectedTime) => {
-                  handleTimeChange(event, selectedTime);
+                  handleRainbowTimeChange(event, selectedTime);
                 }}
                 style={{
                   width: dimensions.width * 0.9,
@@ -1229,22 +1210,22 @@ const HomeScreen = () => {
               onPress={saveRainbowHabbit}
               style={{
                 alignSelf: 'center',
-                width: dimensions.width * 0.93,
+                backgroundColor: rainbHabitTitle === '' || rainbExecutionFrequencies === '' || coverImage === '' || !coverImage ? '#ffffff80' : '#B71F1D',
                 height: dimensions.height * 0.064,
                 borderRadius: dimensions.width * 0.037,
-                marginTop: dimensions.height * 0.025,
                 alignItems: 'center',
                 justifyContent: 'center',
                 opacity: rainbHabitTitle === '' || rainbExecutionFrequencies === '' || coverImage === '' || !coverImage ? 0.5 : 1,
-                backgroundColor: rainbHabitTitle === '' || rainbExecutionFrequencies === '' || coverImage === '' || !coverImage ? '#ffffff80' : '#B71F1D',
+                width: dimensions.width * 0.93,
+                marginTop: dimensions.height * 0.025,
               }}
             >
               <Text
                 style={{
-                  fontFamily: fontDMSansRegular,
-                  fontSize: dimensions.width * 0.037,
-                  color: 'white',
                   fontWeight: 700,
+                  fontFamily: fontDMSansRegular,
+                  color: 'white',
+                  fontSize: dimensions.width * 0.037,
                 }}
               >
                 Save habbit
