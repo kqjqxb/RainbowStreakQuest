@@ -598,11 +598,13 @@ const RainbowLepreGameScreen = ({ setSelectedRainbowScreen, isRainbowGameStarted
 
             <TouchableOpacity
               onPress={() => {
-                setRainbowCoinsAmount(0);
-                setIsRainbowGameStarted(true);
-                setHeartsAmount(3);
-                setRainbowTimeRemaining(59);
-                setResultsRainbowModalVisible(false);
+                // setRainbowCoinsAmount(0);
+                // setIsRainbowGameStarted(true);
+                // setHeartsAmount(3);
+                // setRainbowTimeRemaining(59);
+                // setResultsRainbowModalVisible(false);
+
+                hangleRestartRainbowGame();
               }}
               style={{
                 justifyContent: 'center',

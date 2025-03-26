@@ -766,7 +766,8 @@ const HomeScreen = () => {
                 )}
 
                 <TouchableOpacity
-                  onPress={handleMarkAsDone}
+                  // onPress={handleMarkAsDone}
+                  onPress={() => {handleCompleteHabbit()}}
                   style={{
                     height: dimensions.height * 0.059,
                     alignSelf: 'center',

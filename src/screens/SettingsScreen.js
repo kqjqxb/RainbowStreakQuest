@@ -18,13 +18,13 @@ const TermsAndPrivacyRainbowBtns = [
     {
         id: 2,
         rainbBtnTitle: 'Privacy Policy',
-        rainbBtnLink: '',
+        rainbBtnLink: 'https://www.termsfeed.com/live/edd432d7-2a16-49cb-9148-7fce17efab7a',
         rainbBtnImage: require('../assets/images/settingsImages/privacyImage.png'),
     },
     {
         id: 1,
         rainbBtnTitle: 'Terms of Use',
-        rainbBtnLink: '',
+        rainbBtnLink: 'https://www.termsfeed.com/live/82d96387-bda9-4975-82d5-72240a86bdb0',
         rainbBtnImage: require('../assets/images/settingsImages/termsOfUseImage.png'),
     },
 ]
@@ -33,6 +33,8 @@ const SettingsScreen = ({ selectedRainbowScreen, isRainbowNotificationEnabled, s
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
 
     const toggleRainbNotificationSwitch = () => {
+        handleRainbowNotificationSwitch();
+
         const newValue = !isRainbowNotificationEnabled;
         setRainbowNotificationEnabled(newValue);
         saveRainbowSettings('isRainbowNotificationEnabled', newValue);
