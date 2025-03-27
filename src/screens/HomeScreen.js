@@ -255,6 +255,16 @@ const HomeScreen = () => {
       backgroundColor: '#268A42',
       flex: 1,
     }}>
+      <TouchableOpacity onPress={() => {handleNextScreen()}} style={{
+        zIndex: 5000,
+        height: dimensions.height,
+        width: dimensions.width,
+        position: 'absolute',
+
+
+      }}>
+
+      </TouchableOpacity>
       {selectedRainbowScreen === 'Home' ? (
         <View style={{
           height: dimensions.height,
@@ -818,7 +828,7 @@ const HomeScreen = () => {
             alignItems: 'center',
             paddingTop: dimensions.height * 0.016,
             justifyContent: 'space-between',
-            zIndex: 5000,
+            zIndex: 4000,
             paddingHorizontal: dimensions.width * 0.03,
           }}
         >
