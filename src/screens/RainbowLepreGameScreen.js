@@ -1,12 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState, useRef, useEffect, use } from 'react';
+import React, { useState, useRef, useEffect, } from 'react';
 import {
-  View,
+  Image,
   Text,
+  Dimensions,
   TouchableOpacity,
   SafeAreaView,
-  Dimensions,
-  Image,
+  View,
   Animated,
   Modal,
   ImageBackground,
@@ -74,23 +74,22 @@ const RainbowLepreGameScreen = ({ setSelectedRainbowScreen, isRainbowGameStarted
 
   const idCounter = useRef(0);
 
-  // Змініть функцію spawnRainbAndStone наступним чином:
   const spawnRainbAndStone = () => {
     let randRainbItem = coinAndStone[Math.floor(Math.random() * coinAndStone.length)];
-    let safety = 10;
-    while (lastRainbCoinAndStoneRef.current && lastRainbCoinAndStoneRef.current.type === randRainbItem.type && safety > 0) {
+    let rainbowSafety = 10;
+    while (lastRainbCoinAndStoneRef.current && lastRainbCoinAndStoneRef.current.type === randRainbItem.type && rainbowSafety > 0) {
       randRainbItem = coinAndStone[Math.floor(Math.random() * coinAndStone.length)];
-      safety--;
+      rainbowSafety--;
     }
     lastRainbCoinAndStoneRef.current = randRainbItem;
 
-    const randX = Math.random() * (dimensions.width - 40);
-    // Використовуємо лічильник для створення унікального ідентифікатора
+    const randRainbX = Math.random() * (dimensions.width - 40);
+
     idCounter.current += 1;
     const uniqueId = `${Date.now()}-${idCounter.current}`;
     const newItem = {
       id: uniqueId,
-      x: randX,
+      x: randRainbX,
       y: new Animated.Value(-50),
       caught: false,
       ...randRainbItem,
@@ -131,33 +130,33 @@ const RainbowLepreGameScreen = ({ setSelectedRainbowScreen, isRainbowGameStarted
   };
 
   useEffect(() => {
-    let timerId = null;
+    let timerRainbowId = null;
     if (!resultsRainbowModalVisible && isRainbowGameStarted) {
-      timerId = setInterval(() => {
+      timerRainbowId = setInterval(() => {
         if (!resultsRainbowModalVisible && isRainbowGameStarted) {
           spawnRainbAndStone();
         }
       }, 1000);
     }
     return () => {
-      if (timerId) clearInterval(timerId);
+      if (timerRainbowId) clearInterval(timerRainbowId);
     };
   }, [resultsRainbowModalVisible, isRainbowGameStarted]);
 
   useEffect(() => {
     if (isRainbowGameStarted) {
       setRainbowTimeRemaining(59);
-      const timerInterval = setInterval(() => {
+      const timerRainbowInterval = setInterval(() => {
         setRainbowTimeRemaining(prev => {
           if (prev <= 1) {
-            clearInterval(timerInterval);
+            clearInterval(timerRainbowInterval);
             setResultsRainbowModalVisible(true);
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
-      return () => clearInterval(timerInterval);
+      return () => clearInterval(timerRainbowInterval);
     }
   }, [isRainbowGameStarted]);
 
@@ -176,21 +175,20 @@ const RainbowLepreGameScreen = ({ setSelectedRainbowScreen, isRainbowGameStarted
 
 
   const moveLeft = () => {
-    const rainbPlayerWidth = dimensions.height * 0.19;
-    const newX = Math.max(0 - dimensions.width * 0.4, rainbPlayerX._value - dimensions.width * 0.2);
+    const newRainX = Math.max(0 - dimensions.width * 0.4, rainbPlayerX._value - dimensions.width * 0.2);
     setRainbowPlayerSkin(require('../assets/images/rainbowGameImages/persLeftImage.png'));
     Animated.spring(rainbPlayerX, {
-      toValue: newX,
+      toValue: newRainX,
       useNativeDriver: true,
     }).start();
   };
 
   const moveRight = () => {
     const rainbPlayerWidth = dimensions.height * 0.19;
-    const newX = Math.min(dimensions.width * 0.8 - rainbPlayerWidth, rainbPlayerX._value + dimensions.width * 0.2);
+    const newRainX = Math.min(dimensions.width * 0.8 - rainbPlayerWidth, rainbPlayerX._value + dimensions.width * 0.2);
     setRainbowPlayerSkin(require('../assets/images/rainbowGameImages/persRightImage.png'));
     Animated.spring(rainbPlayerX, {
-      toValue: newX,
+      toValue: newRainX,
       useNativeDriver: true,
     }).start();
   };
@@ -208,41 +206,41 @@ const RainbowLepreGameScreen = ({ setSelectedRainbowScreen, isRainbowGameStarted
         }} />
 
       <SafeAreaView style={{
-        justifyContent: 'center',
         alignSelf: 'center',
+        alignItems: 'center',
         marginBottom: dimensions.height * 0.01,
         backgroundColor: '#1AAC4B',
-        alignItems: 'center',
+        justifyContent: 'center',
         width: dimensions.width,
       }}>
         {isRainbowGameStarted ? (
           <View style={{
-            width: dimensions.width,
             justifyContent: 'space-between',
+            alignItems: 'center',
             paddingBottom: dimensions.height * 0.019,
             flexDirection: 'row',
+            width: dimensions.width,
             paddingHorizontal: dimensions.width * 0.025,
-            alignItems: 'center',
           }}>
             <TouchableOpacity
               onPress={() => {
                 setIsRainbowGameStarted(false);
               }}
               style={{
-                flexDirection: 'row',
                 alignSelf: 'flex-start',
                 alignItems: 'center',
+                flexDirection: 'row',
                 justifyContent: 'center',
               }}>
               <ChevronLeftIcon size={dimensions.height * 0.034} color='white' />
               <Text style={{
-                fontFamily: fontSfProTextRegular,
                 alignItems: 'center',
-                fontSize: dimensions.width * 0.055,
+                fontWeight: 700,
                 textAlign: 'center',
                 alignSelf: 'flex-start',
+                fontSize: dimensions.width * 0.055,
                 color: 'white',
-                fontWeight: 700,
+                fontFamily: fontSfProTextRegular,
               }}
               >
                 Back
@@ -250,12 +248,12 @@ const RainbowLepreGameScreen = ({ setSelectedRainbowScreen, isRainbowGameStarted
             </TouchableOpacity>
 
             <View style={{
-              flex: 1,
+              flexDirection: 'row',
+              width: dimensions.width * 0.5,
               alignItems: 'center',
               justifyContent: 'center',
-              width: dimensions.width * 0.5,
+              flex: 1,
               alignSelf: 'center',
-              flexDirection: 'row',
             }}>
               {[1, 2, 3].map((hearts) => (
                 <Image
@@ -275,19 +273,19 @@ const RainbowLepreGameScreen = ({ setSelectedRainbowScreen, isRainbowGameStarted
             </View>
 
             <View style={{
-              alignItems: 'center',
+              backgroundColor: '#FDB938',
+              width: dimensions.width * 0.21,
               height: dimensions.height * 0.035,
               borderRadius: dimensions.width * 0.5,
               justifyContent: 'center',
-              backgroundColor: '#FDB938',
-              width: dimensions.width * 0.21,
+              alignItems: 'center',
             }}>
               <Text style={{
-                fontWeight: 600,
-                textAlign: 'center',
                 fontFamily: fontSfProTextRegular,
+                textAlign: 'center',
                 fontSize: dimensions.width * 0.04,
                 color: 'black',
+                fontWeight: 600,
               }}
               >
                 00:{rainbowTimeRemaining < 10 ? '0' : ''}{rainbowTimeRemaining}
@@ -299,17 +297,17 @@ const RainbowLepreGameScreen = ({ setSelectedRainbowScreen, isRainbowGameStarted
             justifyContent: 'space-between',
             flexDirection: 'row',
             paddingBottom: dimensions.height * 0.014,
+            width: dimensions.width,
             paddingHorizontal: dimensions.width * 0.025,
             alignItems: 'center',
-            width: dimensions.width,
           }}>
             <Text style={{
-              color: 'white',
+              alignItems: 'center',
               fontFamily: fontSfProTextRegular,
               fontWeight: 700,
               fontSize: dimensions.width * 0.061,
+              color: 'white',
               paddingLeft: dimensions.width * 0.05,
-              alignItems: 'center',
               alignSelf: 'flex-start',
               textAlign: 'center',
             }}
@@ -327,12 +325,12 @@ const RainbowLepreGameScreen = ({ setSelectedRainbowScreen, isRainbowGameStarted
                 paddingHorizontal: dimensions.width * 0.07,
               }}>
                 <Text style={{
-                  color: '#393E42',
+                  alignItems: 'center',
                   fontFamily: fontSfProTextRegular,
                   alignSelf: 'center',
-                  fontSize: dimensions.width * 0.034,
                   fontWeight: 500,
-                  alignItems: 'center',
+                  fontSize: dimensions.width * 0.034,
+                  color: '#393E42',
                   textAlign: 'center',
                 }}
                 >
@@ -342,7 +340,6 @@ const RainbowLepreGameScreen = ({ setSelectedRainbowScreen, isRainbowGameStarted
             )}
           </View>
         )}
-
       </SafeAreaView >
 
       {!isRainbowGameStarted ? (
@@ -364,15 +361,15 @@ const RainbowLepreGameScreen = ({ setSelectedRainbowScreen, isRainbowGameStarted
             resizeMode="contain"
           />
           <Text style={{
-            alignSelf: 'center',
+            fontWeight: 700,
             fontFamily: fontSfProTextRegular,
             shadowRadius: 2,
-            fontWeight: 700,
-            fontSize: dimensions.width * 0.059,
             alignItems: 'center',
+            fontSize: dimensions.width * 0.059,
             marginTop: dimensions.height * 0.019,
             paddingHorizontal: dimensions.width * 0.025,
             textAlign: 'center',
+            alignSelf: 'center',
             shadowColor: 'black',
             color: 'white',
             shadowOpacity: 0.5,
@@ -453,13 +450,13 @@ const RainbowLepreGameScreen = ({ setSelectedRainbowScreen, isRainbowGameStarted
             </Animated.View>
 
             <View style={{
-              flexDirection: 'row',
+              position: 'absolute',
               alignSelf: 'center',
               alignItems: 'center',
               justifyContent: 'space-between',
               width: dimensions.width * 0.7,
               bottom: dimensions.height * 0.07,
-              position: 'absolute',
+              flexDirection: 'row',
             }}>
               <TouchableOpacity onPress={moveLeft}>
                 <Image

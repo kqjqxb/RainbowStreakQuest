@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState, useMemo } from 'react';
 import {
   View,
@@ -26,20 +25,20 @@ const rainbowColors = [
 ]
 
 const formatRainbowDate = (date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const rainbowYear = date.getFullYear();
+  const rainbowMonth = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return `${rainbowYear}-${rainbowMonth}-${day}`;
 };
 
 const formatRainbowHeaderDate = (dateString) => {
   const date = new Date(dateString);
-  const month = date.toLocaleString('default', { month: 'long' });
-  const year = date.getFullYear();
-  return `${month} ${year}`;
+  const rainbowMonth = date.toLocaleString('default', { rainbowMonth: 'long' });
+  const rainbowYear = date.getFullYear();
+  return `${rainbowMonth} ${rainbowYear}`;
 };
 
-const RainbowCalendarScreen = ({ selectedRainbowScreen, setSelectedRainbowScreen, setIsCalendarVisible, setIsEditindTodayRelfection }) => {
+const RainbowCalendarScreen = ({ selectedRainbowScreen, }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [selectedRainbowDate, setSelectedRainbowDate] = useState(formatRainbowDate(new Date()));
   const [rainbowToday, setRainbowToday] = useState(formatRainbowDate(new Date()));
@@ -158,7 +157,7 @@ const RainbowCalendarScreen = ({ selectedRainbowScreen, setSelectedRainbowScreen
 
   const weekEnd = new Date(weekStart);
   weekEnd.setDate(weekStart.getDate() + 6);
-  const headerText = `${weekStart.getDate()} - ${weekEnd.getDate()} ${weekEnd.toLocaleString('default', { month: 'long' })}`;
+  const headerText = `${weekStart.getDate()} - ${weekEnd.getDate()} ${weekEnd.toLocaleString('default', { rainbowMonth: 'long' })}`;
 
   const habitsForSelectedDay = rainbowHabbits
     .filter(habit => {
@@ -309,12 +308,12 @@ const RainbowCalendarScreen = ({ selectedRainbowScreen, setSelectedRainbowScreen
                   alignSelf: 'center',
                   flexDirection: 'row',
                 }}>
-                  {weekDates.map((dateObj, index) => {
-                    const isSelected = dateObj.date.toDateString() === selectedRainbowCalendarDay.toDateString();
+                  {weekDates.map((rainbowDateObj, index) => {
+                    const isSelected = rainbowDateObj.date.toDateString() === selectedRainbowCalendarDay.toDateString();
                     return (
                       <TouchableOpacity
                         key={index}
-                        onPress={() => setSelectedRainbowCalendarDay(dateObj.date)}
+                        onPress={() => setSelectedRainbowCalendarDay(rainbowDateObj.date)}
                         style={{
                           marginRight: dimensions.width * 0.016,
                           borderRadius: dimensions.width * 0.1,
@@ -335,7 +334,7 @@ const RainbowCalendarScreen = ({ selectedRainbowScreen, setSelectedRainbowScreen
                             fontFamily: fontSfProTextRegular,
                           }}
                         >
-                          {dateObj.dayOfWeek}
+                          {rainbowDateObj.dayOfWeek}
                         </Text>
                         <Text
                           style={{
@@ -347,7 +346,7 @@ const RainbowCalendarScreen = ({ selectedRainbowScreen, setSelectedRainbowScreen
                             marginTop: dimensions.height * 0.004,
                           }}
                         >
-                          {dateObj.day}
+                          {rainbowDateObj.day}
                         </Text>
                       </TouchableOpacity>
                     );
@@ -515,7 +514,7 @@ const RainbowCalendarScreen = ({ selectedRainbowScreen, setSelectedRainbowScreen
                 fontFamily: fontSfProTextRegular,
               }}
             >
-              {selectedRainbowCalendarDay.toLocaleDateString('default', { month: 'long', day: 'numeric' })}
+              {selectedRainbowCalendarDay.toLocaleDateString('default', { rainbowMonth: 'long', day: 'numeric' })}
             </Text>
 
             <Image

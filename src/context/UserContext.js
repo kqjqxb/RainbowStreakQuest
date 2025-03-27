@@ -7,30 +7,21 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const loadHereUser = async () => {
+    const loadRainbowUser = async () => {
       try {
-        const storedHereUser = await AsyncStorage.getItem('currentUser');
-        if (storedHereUser) {
-          setUser(JSON.parse(storedHereUser));
+        const storedRainbowUser = await AsyncStorage.getItem('currentUser');
+        if (storedRainbowUser) {
+          setUser(JSON.parse(storedRainbowUser));
         }
       } catch (error) {
-        console.error('Error loading user data:', error);
+        console.error('Error loading storedRainbowUser data:', error);
       }
     };
-    loadHereUser();
+    loadRainbowUser();
   }, []);
 
-  const logout = async () => {
-    try {
-      await AsyncStorage.removeItem('currentUser');
-      setUser(null);
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
-
   return (
-    <UserContext.Provider value={{ user, setUser, logout }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );
