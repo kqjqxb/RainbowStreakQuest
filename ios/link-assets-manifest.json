@@ -2,30 +2,6 @@
   "migIndex": 1,
   "data": [
     {
-      "path": "src/assets/fonts/DMSans-Black.ttf",
-      "sha1": "2546610b95f9b941cf98a3485fb66ae0f2283476"
-    },
-    {
-      "path": "src/assets/fonts/DMSans-Bold.ttf",
-      "sha1": "183ca56aa84af9774818fba4839814582e361f0d"
-    },
-    {
-      "path": "src/assets/fonts/DMSans-Light.ttf",
-      "sha1": "6706427692a469283cabfd6f498fac39b814b78b"
-    },
-    {
-      "path": "src/assets/fonts/DMSans-Medium.ttf",
-      "sha1": "4990f8ea90a8099886176643f6ad79aa2d0d398c"
-    },
-    {
-      "path": "src/assets/fonts/DMSans-Regular.ttf",
-      "sha1": "d27f051995049b2fb0445c7b1caca9e88950766a"
-    },
-    {
-      "path": "src/assets/fonts/DMSans-SemiBold.ttf",
-      "sha1": "0238b3dd66beb77571a61df2a629b79beff33cef"
-    },
-    {
       "path": "src/assets/fonts/SF-Pro-Display-Black.otf",
       "sha1": "63bff54eeb90e47408e27d5bb89199c7d187f43d"
     },
@@ -46,10 +22,6 @@
       "sha1": "1919ecaa21bd612d41f8eeef6ccec2f28ad029f6"
     },
     {
-      "path": "src/assets/fonts/SF-Pro-Display-Thin.otf",
-      "sha1": "dd4aa365895558a205e3b2123240b4281be1c2b8"
-    },
-    {
       "path": "src/assets/fonts/SFProText-Bold.ttf",
       "sha1": "632e6cea171b276e5dd1f13b152c702fbf562cee"
     },
@@ -62,10 +34,6 @@
       "sha1": "bfc75c545dbe2a8c7c3d6d6223e42aaa5ccb9432"
     },
     {
-      "path": "src/assets/fonts/SFProText-HeavyItalic.ttf",
-      "sha1": "453fa152033f6dabeccd76acb8b233506a1fb900"
-    },
-    {
       "path": "src/assets/fonts/SFProText-Light.ttf",
       "sha1": "ecc8da32c2eac6044c807e945375180b7cda3a20"
     },
@@ -74,28 +42,12 @@
       "sha1": "ba64b1f9682eaf3f690a32780f557c04d6e580bb"
     },
     {
-      "path": "src/assets/fonts/SFProText-Medium.ttf",
-      "sha1": "3b8df618cd23e83843b16a8a32de1ddc9de44df4"
-    },
-    {
-      "path": "src/assets/fonts/SFProText-MediumItalic.ttf",
-      "sha1": "ac53a637876a86217ad500f0046ac87ad37bd4c5"
-    },
-    {
       "path": "src/assets/fonts/SFProText-Regular.ttf",
       "sha1": "b4893462f2289df6978f9462a63db9e64bcc9342"
     },
     {
-      "path": "src/assets/fonts/SFProText-RegularItalic.ttf",
-      "sha1": "85063cfc8ebaa6d2605c794a41d23722bd508fc5"
-    },
-    {
       "path": "src/assets/fonts/SFProText-Semibold.ttf",
       "sha1": "9560ae412d73c7c9af72333db50464b4e597b0f9"
-    },
-    {
-      "path": "src/assets/fonts/SFProText-SemiboldItalic.ttf",
-      "sha1": "a0894273595c5a45a366bb4fbc045e7d82a9ba41"
     }
   ]
 }
