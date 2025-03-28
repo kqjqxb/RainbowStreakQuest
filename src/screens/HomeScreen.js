@@ -19,7 +19,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import SettingsScreen from './SettingsScreen';
 import LoadingRainbowStreakScreen from './LoadingRainbowStreakScreen';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
-import RainbowLepreGameScreen from './RainbowLepreGameScreen';
+// import RainbowLepreGameScreen from './RainbowLepreGameScreen';
 import RainbowCalendarScreen from './RainbowCalendarScreen';
 
 const homeRainbowScreensButtons = [
@@ -33,11 +33,11 @@ const homeRainbowScreensButtons = [
     rainbowWhiteIcon: require('../assets/icons/rainbowButtons/calendarIcon.png'),
     rainbowScreenTitle: 'Calendar',
   },
-  {
-    rainbowScreen: 'Game',
-    rainbowWhiteIcon: require('../assets/icons/rainbowButtons/gameIcon.png'),
-    rainbowScreenTitle: 'Game',
-  },
+  // {
+  //   rainbowScreen: 'Game',
+  //   rainbowWhiteIcon: require('../assets/icons/rainbowButtons/gameIcon.png'),
+  //   rainbowScreenTitle: 'Game',
+  // },
   {
     rainbowScreen: 'Settings',
     rainbowWhiteIcon: require('../assets/icons/rainbowButtons/settingsIcon.png'),
@@ -255,7 +255,7 @@ const HomeScreen = () => {
       backgroundColor: '#268A42',
       flex: 1,
     }}>
-      <TouchableOpacity onPress={() => {handleNextScreen()}} style={{
+      {/* <TouchableOpacity onPress={() => {handleNextScreen()}} style={{
         zIndex: 5000,
         height: dimensions.height,
         width: dimensions.width,
@@ -264,7 +264,7 @@ const HomeScreen = () => {
 
       }}>
 
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       {selectedRainbowScreen === 'Home' ? (
         <View style={{
           height: dimensions.height,
@@ -776,8 +776,8 @@ const HomeScreen = () => {
                 )}
 
                 <TouchableOpacity
-                  // onPress={handleMarkAsDone}
-                  onPress={() => {handleCompleteHabbit()}}
+                  onPress={handleMarkAsDone}
+                  // onPress={() => {handleCompleteHabbit()}}
                   style={{
                     height: dimensions.height * 0.059,
                     alignSelf: 'center',
@@ -804,9 +804,6 @@ const HomeScreen = () => {
         </View>
       ) : selectedRainbowScreen === 'Settings' ? (
         <SettingsScreen setSelectedRainbowScreen={setSelectedRainbowScreen} isRainbowNotificationEnabled={isRainbowNotificationEnabled} setRainbowNotificationEnabled={setRainbowNotificationEnabled}
-        />
-      ) : selectedRainbowScreen === 'Game' ? (
-        <RainbowLepreGameScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} isRainbowGameStarted={isRainbowGameStarted} setIsRainbowGameStarted={setIsRainbowGameStarted}
         />
       ) : selectedRainbowScreen === 'Calendar' ? (
         <RainbowCalendarScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} />
