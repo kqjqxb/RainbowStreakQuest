@@ -1,19 +1,19 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Alert,
+  Text,
   Dimensions,
   Image,
   Modal,
   SafeAreaView,
-  ScrollView,
   Switch,
-  Text,
+  ScrollView,
   TextInput,
+  Alert,
   TouchableOpacity,
   View
 } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import SettingsScreen from './SettingsScreen';
@@ -55,7 +55,7 @@ const HomeScreen = () => {
 
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [rainbowHabbits, setRainbowHabbits] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [addRainHabModalVisible, setAddRainHabModalVisible] = useState(false);
   const [coverImage, setCoverImage] = useState('');
   const [rainbHabitTitle, setRainbHabitTitle] = useState('');
 
@@ -70,7 +70,7 @@ const HomeScreen = () => {
 
   const rainbowScrollViewRef = useRef(null);
 
-  const loadRainbowSettings = async () => {
+  const loadRainbowNotifications = async () => {
     try {
       const notificationRainbowValue = await AsyncStorage.getItem('isRainbowNotificationEnabled');
 
@@ -81,7 +81,7 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    loadRainbowSettings();
+    loadRainbowNotifications();
   }, [isRainbowNotificationEnabled, selectedRainbowScreen]);
 
   useEffect(() => {
@@ -104,7 +104,7 @@ const HomeScreen = () => {
   const handleDeleteRainbowHabitImage = () => {
     Alert.alert(
       "Delete image",
-      "Really delete image of your habit?",
+      "Really delete image of your rainbow RainHabit?",
       [
         {
           text: "Cancel",
@@ -146,12 +146,12 @@ const HomeScreen = () => {
 
       await AsyncStorage.setItem('rainbowHabbits', JSON.stringify(rainbowHabbits));
 
-      setModalVisible(false);
+      setAddRainHabModalVisible(false);
       setCoverImage('');
-      setRainbHabitTitle('');
       setRainbExecutionFrequencies('');
       setRainbSkipBy('');
       setIsRainbReminder(false);
+      setRainbHabitTitle('');
       setRainbReminderTime(new Date());
 
     } catch (error) {
@@ -197,12 +197,12 @@ const HomeScreen = () => {
 
     const wasDone = selectedHabit.status === 'done';
 
-    const updatedHabits = rainbowHabbits.map(habit => {
-      if (habit.id === selectedHabit.id) {
-        const newStatus = habit.status === 'done' ? 'not done' : 'done';
-        return { ...habit, status: newStatus };
+    const updatedHabits = rainbowHabbits.map(RainHabit => {
+      if (RainHabit.id === selectedHabit.id) {
+        const newStatus = RainHabit.status === 'done' ? 'not done' : 'done';
+        return { ...RainHabit, status: newStatus };
       }
-      return habit;
+      return RainHabit;
     });
     setRainbowHabbits(updatedHabits);
 
@@ -218,7 +218,7 @@ const HomeScreen = () => {
 
       setIsHabitVisible(false);
     } catch (error) {
-      console.error('Error updating habit status', error);
+      console.error('Error updating RainHabit status', error);
     }
   };
 
@@ -230,7 +230,7 @@ const HomeScreen = () => {
       const msUntilMidnight = nextMidnight - now;
 
       const timerId = setTimeout(async () => {
-        const updatedHabits = rainbowHabbits.map(habit => ({ ...habit, status: 'done' }));
+        const updatedHabits = rainbowHabbits.map(RainHabit => ({ ...RainHabit, status: 'done' }));
         setRainbowHabbits(updatedHabits);
         try {
           await AsyncStorage.setItem('rainbowHabbits', JSON.stringify(updatedHabits));
@@ -308,13 +308,13 @@ const HomeScreen = () => {
             ) : (
               <Text style={{
                 paddingBottom: dimensions.height * 0.014,
+                alignSelf: 'flex-start',
                 textAlign: 'center',
                 fontFamily: fontDMSansRegular,
-                fontSize: dimensions.width * 0.061,
-                alignItems: 'center',
-                alignSelf: 'flex-start',
-                paddingLeft: dimensions.width * 0.05,
                 fontWeight: 700,
+                alignItems: 'center',
+                fontSize: dimensions.width * 0.061,
+                paddingLeft: dimensions.width * 0.05,
                 color: 'white',
               }}
               >
@@ -342,11 +342,11 @@ const HomeScreen = () => {
                 >
                   <View style={{
                     marginRight: dimensions.width * 0.25,
+                    flexDirection: 'row',
                     alignItems: 'center',
                     width: dimensions.width * 0.9,
                     justifyContent: 'space-between',
                     alignSelf: 'center',
-                    flexDirection: 'row',
                   }}>
                     {Array.from({ length: 7 }, (_, i) => {
                       const date = new Date();
@@ -363,13 +363,13 @@ const HomeScreen = () => {
                           key={index}
                           onPress={() => setSelectedDay(dateObj.date)}
                           style={{
+                            backgroundColor: isSelected ? '#FDB938' : '#1AAC4B',
                             alignItems: 'center',
-                            borderRadius: dimensions.width * 0.1,
+                            marginRight: dimensions.width * 0.016,
                             width: dimensions.width * 0.16,
                             height: dimensions.height * 0.1,
-                            backgroundColor: isSelected ? '#FDB938' : '#1AAC4B',
+                            borderRadius: dimensions.width * 0.1,
                             justifyContent: 'center',
-                            marginRight: dimensions.width * 0.016,
                           }}
                         >
                           <Text
@@ -403,16 +403,16 @@ const HomeScreen = () => {
                 </ScrollView>
               </View>
 
-              {rainbowHabbits.filter(habit => {
-                const habitDay = new Date(habit.date);
-                habitDay.setHours(0, 0, 0, 0);
-                const selectedDayOnly = new Date(selectedDay);
-                selectedDayOnly.setHours(0, 0, 0, 0);
-                if (habitDay.getTime() < selectedDayOnly.getTime()) return false;
-                if (habit.status === 'done') return false;
-                if (habit.skipBy && habit.skipBy.trim() !== '') {
+              {rainbowHabbits.filter(RainHabit => {
+                const rainbowHabitDay = new Date(RainHabit.date);
+                rainbowHabitDay.setHours(0, 0, 0, 0);
+                const selectedRainbDayOnly = new Date(selectedDay);
+                selectedRainbDayOnly.setHours(0, 0, 0, 0);
+                if (rainbowHabitDay.getTime() < selectedRainbDayOnly.getTime()) return false;
+                if (RainHabit.status === 'done') return false;
+                if (RainHabit.skipBy && RainHabit.skipBy.trim() !== '') {
                   const selectedDayFull = selectedDay.toLocaleDateString('en-US', { weekday: 'long' });
-                  if (selectedDayFull === habit.skipBy) return false;
+                  if (selectedDayFull === RainHabit.skipBy) return false;
                 }
                 return true;
               }).length === 0 ? (
@@ -499,19 +499,19 @@ const HomeScreen = () => {
                             fontFamily: fontSfProTextRegular,
                           }}
                         >
-                          You have {rainbowHabbits.filter(habit => {
-                            const habitDay = new Date(habit.date);
-                            habitDay.setHours(0, 0, 0, 0);
-                            const selectedDayOnly = new Date(selectedDay);
-                            selectedDayOnly.setHours(0, 0, 0, 0);
-                            if (habitDay.getTime() < selectedDayOnly.getTime()) return false;
-                            if (habit.status === 'done') return false;
-                            if (habit.skipBy && habit.skipBy.trim() !== '') {
+                          You have {rainbowHabbits.filter(RainHabit => {
+                            const rainbowHabitDay = new Date(RainHabit.date);
+                            rainbowHabitDay.setHours(0, 0, 0, 0);
+                            const selectedRainbDayOnly = new Date(selectedDay);
+                            selectedRainbDayOnly.setHours(0, 0, 0, 0);
+                            if (rainbowHabitDay.getTime() < selectedRainbDayOnly.getTime()) return false;
+                            if (RainHabit.status === 'done') return false;
+                            if (RainHabit.skipBy && RainHabit.skipBy.trim() !== '') {
                               const selectedDayFull = selectedDay.toLocaleDateString('en-US', { weekday: 'long' });
-                              if (selectedDayFull === habit.skipBy) return false;
+                              if (selectedDayFull === RainHabit.skipBy) return false;
                             }
                             return true;
-                          }).length} unfulfilled habit{rainbowHabbits.length > 1 ? 's' : ''}
+                          }).length} unfulfilled RainHabit{rainbowHabbits.length > 1 ? 's' : ''}
                         </Text>
 
                         <Text
@@ -532,16 +532,16 @@ const HomeScreen = () => {
 
                     <View style={{ marginTop: dimensions.height * 0.03 }}></View>
 
-                    {rainbowHabbits.filter(habit => {
-                      const habitDay = new Date(habit.date);
-                      habitDay.setHours(0, 0, 0, 0);
-                      const selectedDayOnly = new Date(selectedDay);
-                      selectedDayOnly.setHours(0, 0, 0, 0);
-                      if (habitDay.getTime() < selectedDayOnly.getTime()) return false;
-                      if (habit.status === 'done') return false;
-                      if (habit.skipBy && habit.skipBy.trim() !== '') {
+                    {rainbowHabbits.filter(RainHabit => {
+                      const rainbowHabitDay = new Date(RainHabit.date);
+                      rainbowHabitDay.setHours(0, 0, 0, 0);
+                      const selectedRainbDayOnly = new Date(selectedDay);
+                      selectedRainbDayOnly.setHours(0, 0, 0, 0);
+                      if (rainbowHabitDay.getTime() < selectedRainbDayOnly.getTime()) return false;
+                      if (RainHabit.status === 'done') return false;
+                      if (RainHabit.skipBy && RainHabit.skipBy.trim() !== '') {
                         const selectedDayFull = selectedDay.toLocaleDateString('en-US', { weekday: 'long' });
-                        if (selectedDayFull === habit.skipBy) return false;
+                        if (selectedDayFull === RainHabit.skipBy) return false;
                       }
                       return true;
                     }).map((rainbowHabit, index) => (
@@ -661,7 +661,7 @@ const HomeScreen = () => {
               )}
               <TouchableOpacity
                 onPress={() => {
-                  setModalVisible(true);
+                  setAddRainHabModalVisible(true);
                 }}
                 style={{
                   alignSelf: 'flex-end',
@@ -776,8 +776,8 @@ const HomeScreen = () => {
                 )}
 
                 <TouchableOpacity
-                  onPress={handleMarkAsDone}
-                  // onPress={() => {handleCompleteHabbit()}}
+                  // onPress={handleMarkAsDone}
+                  onPress={() => {handleCompleteHabbit()}}
                   style={{
                     height: dimensions.height * 0.059,
                     alignSelf: 'center',
@@ -811,40 +811,40 @@ const HomeScreen = () => {
         <LoadingRainbowStreakScreen setSelectedRainbowScreen={setSelectedRainbowScreen} selectedRainbowScreen={selectedRainbowScreen} />
       ) : null}
 
-      {selectedRainbowScreen !== 'LoadingRainbow' && !(selectedRainbowScreen === 'Game' && isRainbowGameStarted) && (
+      {selectedRainbowScreen !== 'LoadingRainbow' && (
         <View
           style={{
-            position: 'absolute',
-            bottom: 0,
+            bottom: dimensions.height * 0, 
             height: dimensions.height * 0.12,
             alignSelf: 'center',
             backgroundColor: '#1AAC4B',
             flexDirection: 'row',
             width: dimensions.width,
-            paddingBottom: dimensions.height * 0.025,
+            position: 'absolute',
             alignItems: 'center',
-            paddingTop: dimensions.height * 0.016,
+            paddingTop: dimensions.height * 0.015,
             justifyContent: 'space-between',
             zIndex: 4000,
-            paddingHorizontal: dimensions.width * 0.03,
+            paddingHorizontal: dimensions.width * 0.05,
+            paddingBottom: dimensions.height * 0.024,
           }}
         >
-          {homeRainbowScreensButtons.map((button, index) => (
+          {homeRainbowScreensButtons.map((rainbBtn, index) => (
             <TouchableOpacity
               key={index}
-              onPress={() => setSelectedRainbowScreen(button.rainbowScreen)}
+              onPress={() => setSelectedRainbowScreen(rainbBtn.rainbowScreen)}
               style={{
-                width: dimensions.width * 0.23,
-                borderRadius: dimensions.width * 0.07,
+                width: dimensions.width * 0.24,
                 alignItems: 'center',
                 height: dimensions.height * 0.088,
                 marginHorizontal: dimensions.width * 0.001,
-                backgroundColor: selectedRainbowScreen === button.rainbowScreen ? '#268A42' : 'transparent',
+                borderRadius: dimensions.width * 0.07,
                 padding: dimensions.height * 0.019,
+                backgroundColor: selectedRainbowScreen === rainbBtn.rainbowScreen ? '#268A42' : 'transparent',
               }}
             >
               <Image
-                source={button.rainbowWhiteIcon}
+                source={rainbBtn.rainbowWhiteIcon}
                 style={{
                   width: dimensions.height * 0.028,
                   height: dimensions.height * 0.028,
@@ -861,14 +861,14 @@ const HomeScreen = () => {
                   fontWeight: 600,
                 }}
               >
-                {button.rainbowScreenTitle}
+                {rainbBtn.rainbowScreenTitle}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
       )}
 
-      <Modal visible={modalVisible} transparent={true} animationType="slide">
+      <Modal visible={addRainHabModalVisible} transparent={true} animationType="slide">
         <View
           style={{
             paddingHorizontal: dimensions.width * 0.05,
@@ -891,7 +891,7 @@ const HomeScreen = () => {
           }}>
             <TouchableOpacity
               onPress={() => {
-                setModalVisible(false);
+                setAddRainHabModalVisible(false);
                 setRainbSkipBy('');
                 setRainbHabitTitle('');
                 setRainbExecutionFrequencies('');
@@ -921,7 +921,7 @@ const HomeScreen = () => {
                 textAlign: 'center',
               }}
               >
-                New habit
+                New RainHabit
               </Text>
             </TouchableOpacity>
           </SafeAreaView>
@@ -1209,7 +1209,7 @@ const HomeScreen = () => {
                   fontSize: dimensions.width * 0.03,
                   alignSelf: 'center',
                 }}
-                themeVariant='dark' //worked on ios only
+                themeVariant='dark' 
               />
             )}
 
