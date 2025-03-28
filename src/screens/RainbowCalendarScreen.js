@@ -40,10 +40,8 @@ const formatRainbowHeaderDate = (dateString) => {
 
 const RainbowCalendarScreen = ({ selectedRainbowScreen, }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-  const [selectedRainbowDate, setSelectedRainbowDate] = useState(formatRainbowDate(new Date()));
   const [rainbowToday, setRainbowToday] = useState(formatRainbowDate(new Date()));
 
-  const [selectedSortItem, setSelectedSortItem] = useState('Week');
   const [rainbowHabbits, setRainbowHabbits] = useState([]);
   const [selectedRainbowCalendarDay, setSelectedRainbowCalendarDay] = useState(new Date());
   const [rainbowSeries, setRainbowSeries] = useState(0);
@@ -147,13 +145,6 @@ const RainbowCalendarScreen = ({ selectedRainbowScreen, }) => {
       return true;
     })
     .slice(0, 3);
-
-  const formatRainbowHeaderDate = (dateString) => {
-    const date = new Date(dateString);
-    const month = date.toLocaleString('default', { month: 'long' });
-    const rainbowYear = date.getFullYear();
-    return `${month} ${rainbowYear}`;
-  };
 
   return (
     <View style={{
